@@ -12,8 +12,6 @@
         // Spawn player in center
         SpawnEnemy(600, 800);
 
-		//AddBackground(window.GetWidth(), window.GetHeight());
-
 
         printf("Spawned %zu actors\n", m_Actors.size());
     }
