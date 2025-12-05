@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35931.197 d17.13
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Mechanism", "Mechanism\Mechanism.vcxproj", "{5E75F8D6-A203-4CDB-9E66-AF9A1A9B2F0C}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Xennon", "Xennon\Xennon.vcxproj", "{6C5C3A51-C026-4051-8DFE-5542537C78CB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Mechanism", "Mechanism\Mechanism.vcxproj", "{5E75F8D6-A203-4CDB-9E66-AF9A1A9B2F0C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
