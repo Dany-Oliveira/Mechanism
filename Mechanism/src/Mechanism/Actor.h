@@ -1,5 +1,7 @@
 #pragma once
 #include "Core.h"
+#include "Texture.h"
+#include <memory>
 
 namespace Mechanism
 {
@@ -7,7 +9,6 @@ namespace Mechanism
     {
     public:
 
-        
         Actor(void* renderer, const char* texturePath, float x, float y,
             int gridColumns, int gridRows, int frameIndex = 0);
         ~Actor();
@@ -17,22 +18,37 @@ namespace Mechanism
         void UpdateActor(float deltaTime);
 
 		void ScaleActor(float scaleX, float scaleY);
-        
+
         void SetFrameIndex(int index);
+        void SetAnimationSpeed(float fps) 
+        {
+            m_FrameDuration = 1.0f / fps;
+        }
+
 
         float GetX() const { return m_X; }
         float GetY() const { return m_Y; }
+
+		int GetTextureWidth() const { return m_TextureWidth; }
+		int GetTextureHeight() const { return m_TextureHeight; }
+		int GetFrameWidth() const { return m_FrameWidth; }
+		int GetFrameHeight() const { return m_FrameHeight; }
+
         bool IsValid() const { return m_Texture != nullptr; }
 
 
-        
-
     private:
 
-        void* m_Texture;
+		//Texture
+		std::unique_ptr<Texture> m_Texture;
 
+		// Position
         float m_X;
         float m_Y;
+
+		// Scale factors
+		float m_ScaleX = 1.0f;
+		float m_ScaleY = 1.0f;
 
         // Grid info
         int m_GridColumns;     // How many sprites across
@@ -45,9 +61,9 @@ namespace Mechanism
         int m_FrameWidth;      // Width of one sprite 
         int m_FrameHeight;     // Height of one sprite 
 
-        float m_AnimationTimer;
+		float m_AnimationTimer; //time since last frame change
         float m_FrameDuration; //FPS
-        int m_TotalFrames;
+        int m_TotalFrames;      
       
     };
 }

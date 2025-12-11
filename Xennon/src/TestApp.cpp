@@ -13,13 +13,11 @@ class TestApp : public Mechanism::Application
 			auto& window = GetWindow();
 			printf("Window size: %d x %d\n", window.GetWidth(), window.GetHeight());
 
-			m_CurrentLevel = new GameLevel(window);
+			m_CurrentLevel = std::make_unique<GameLevel>(window);
 			
 		}
 		~TestApp()
 		{
-			printf("TestApp destroyed!\n");
-			delete m_CurrentLevel;
 		}
 
 		void OnUpdate(float deltaTime) override
@@ -40,7 +38,7 @@ class TestApp : public Mechanism::Application
 
 	private:
 		
-		GameLevel* m_CurrentLevel;
+		std::unique_ptr<GameLevel> m_CurrentLevel;
 };
 
 Mechanism::Application* Mechanism::CreateApplication()

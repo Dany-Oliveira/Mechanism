@@ -2,6 +2,10 @@
 #include <vector>
 #include "Mechanism/Actor.h"
 #include "Mechanism/Window.h"
+#include <memory>  
+#include <optional>
+
+
 
     class GameLevel
     {
@@ -12,19 +16,24 @@
         void Render();
         void UpdateGameLevel(float deltaTime);
 
-       
-        void SpawnEnemy(float x, float y);
+		void SpawnLoner(float x, float y);
+		void SpawnRusher(float x, float y);
 
-        void AddBackground(float x, float y);
-
-        
+        void AddBackground();
         void ClearAllActors();
 
-        void SetBackground();
 
     private:
+
         void* m_Renderer;
-        std::vector<Mechanism::Actor*> m_Actors;
-        Mechanism::Actor* m_Player;
+
+		int m_WindowWidth;
+		int m_WindowHeight;
+
+		std::vector<std::unique_ptr<Mechanism::Actor>> m_Actors;// All actors in the level
+
+        Mechanism::Actor* m_Background;
+        Mechanism::Actor* m_Loner;
+        Mechanism::Actor* m_Rusher;
     };
 

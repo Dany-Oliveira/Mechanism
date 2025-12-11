@@ -1,64 +1,41 @@
 #include "Actor.h"
+#include "Texture.h"
 #include <SDL3/SDL.h>
 #include <iostream>
+
 
 namespace Mechanism
 {
     Actor::Actor(void* renderer, const char* texturePath, float x, float y, int gridColumns, int gridRows, int frameIndex)
-        : m_Texture(nullptr)
-        , m_X(x)
-        , m_Y(y)
-        , m_GridColumns(gridColumns)
-        , m_GridRows(gridRows)
-        , m_CurrentFrame(frameIndex)
-        , m_TextureWidth(0)
-        , m_TextureHeight(0)
-        , m_FrameWidth(0)
-        , m_FrameHeight(0)
-        , m_AnimationTimer(0)
-        , m_FrameDuration(0)
-        , m_TotalFrames(0)
+        : m_X(x), m_Y(y), m_ScaleX(1.0f), m_ScaleY(1.0f), m_GridColumns(gridColumns), m_GridRows(gridRows)
+        , m_CurrentFrame(frameIndex), m_TextureWidth(0), m_TextureHeight(0), m_FrameWidth(0), m_FrameHeight(0), m_AnimationTimer(0)
+        , m_FrameDuration(0.1), m_TotalFrames(0)
     {
+
         if (!renderer)
         {
             std::cerr << "Error: Null renderer" << std::endl;
             return;
         }
+        
+        m_Texture = std::make_unique<Texture>(renderer, texturePath);
 
-        // Load texture
-        SDL_Surface* surface = SDL_LoadBMP(texturePath);
-        if (!surface)
+        if(!m_Texture->isValid())
         {
-            std::cerr << "Failed to load: " << texturePath << std::endl;
-            std::cerr << "SDL Error: " << SDL_GetError() << std::endl;
+            std::cerr << "Error: Failed to load texture: " << texturePath << std::endl;
             return;
-        }
+		}
 
-        // Store full texture size
-        m_TextureWidth = surface->w;
-        m_TextureHeight = surface->h;
+		// Get texture dimensions
+		m_TextureWidth = m_Texture->GetWidth();
+		m_TextureHeight = m_Texture->GetHeight();
 
-        // Calculate frame size by dividing texture by grid
-        m_FrameWidth = m_TextureWidth / m_GridColumns;
-        m_FrameHeight = m_TextureHeight / m_GridRows;
+		// Calculate frame dimensions
+		m_FrameWidth = m_TextureWidth / m_GridColumns;
+		m_FrameHeight = m_TextureHeight / m_GridRows;
 
-        // Create texture
-        SDL_Renderer* sdlRenderer = static_cast<SDL_Renderer*>(renderer);
-        SDL_Texture* texture = SDL_CreateTextureFromSurface(sdlRenderer, surface);
-        SDL_DestroySurface(surface);
-
-        if (!texture)
-        {
-            std::cerr << "Failed to create texture" << std::endl;
-            return;
-        }
-
-        m_Texture = texture;
-
-       
-        m_TotalFrames = m_GridColumns * m_GridRows;//calculates the amount of frames in the animation
-
-        m_FrameDuration = 0.1f; //FPS
+		// Total frames
+        m_TotalFrames = m_GridColumns * m_GridRows;
 
         std::cout << "\nActor loaded: " << texturePath << std::endl;
         std::cout << "  Texture: " << m_TextureWidth << "x" << m_TextureHeight << std::endl;
@@ -69,12 +46,8 @@ namespace Mechanism
     }
 
     Actor::~Actor()
-    {
-        if (m_Texture)
-        {
-            SDL_DestroyTexture(static_cast<SDL_Texture*>(m_Texture));
-            m_Texture = nullptr;
-        }
+	{
+		std::cout << "Actor destroyed\n";
     }
 
 
@@ -100,17 +73,17 @@ namespace Mechanism
 
     void Actor::ScaleActor(float scaleX, float scaleY)
     {
-        m_FrameWidth = static_cast<int>(m_FrameWidth * scaleX);
-		m_FrameHeight = static_cast<int>(m_FrameHeight * scaleY);
+		m_ScaleX = scaleX;
+		m_ScaleY = scaleY;
     }
 
     void Actor::Render(void* renderer)
     {
-        if (!m_Texture || !renderer)
+        if (!m_Texture || !m_Texture->isValid() || !renderer)
             return;
 
         SDL_Renderer* sdlRenderer = static_cast<SDL_Renderer*>(renderer);
-        SDL_Texture* sdlTexture = static_cast<SDL_Texture*>(m_Texture);
+        SDL_Texture* sdlTexture = static_cast<SDL_Texture*>(m_Texture->GetSDLTexture());
 
         // Calculate which row and column this frame is in
         int col = m_CurrentFrame % m_GridColumns;
@@ -128,10 +101,10 @@ namespace Mechanism
         SDL_FRect destRect = {
             m_X,
             m_Y,
-            static_cast<float>(m_FrameWidth),
-            static_cast<float>(m_FrameHeight)
+            m_FrameWidth * m_ScaleX,
+			m_FrameHeight* m_ScaleY
         };
-
+        
         SDL_RenderTexture(sdlRenderer, sdlTexture, &srcRect, &destRect);
     }
 
@@ -143,6 +116,9 @@ namespace Mechanism
 
     void Actor::SetFrameIndex(int index)
     {
-        m_CurrentFrame = index;
+        if (index >= 0 && index < m_TotalFrames)
+        {
+            m_CurrentFrame = index;
+        }
     }
 }
