@@ -5,8 +5,6 @@
 
 namespace Mechanism 
 {
-
-    // Internal data structure (hidden from header)
     struct WindowData 
     {
         std::string title;
@@ -23,6 +21,7 @@ namespace Mechanism
             std::cerr << "Window initialization failed\n";
             m_Window = nullptr;
             m_Data = nullptr;
+            
         }
     }
 
@@ -95,7 +94,7 @@ namespace Mechanism
             return false;
         }
 
-        m_Renderer = renderer;
+        m_Renderer = std::make_unique<Mechanism::Renderer>(renderer);
 
         // Show the window
         SDL_ShowWindow(window);
@@ -104,11 +103,8 @@ namespace Mechanism
 
     void Window::Shutdown() 
     {
-        if(m_Renderer)
-        {
-            SDL_DestroyRenderer(static_cast<SDL_Renderer*>(m_Renderer));
-            m_Renderer = nullptr;
-        }
+        m_Renderer.reset();
+
         if (m_Window) 
         {
             SDL_DestroyWindow(static_cast<SDL_Window*>(m_Window));
@@ -140,13 +136,7 @@ namespace Mechanism
                     m_Data->height = event.window.data2;
                 }
             }
-        }
-
-        if (m_Renderer) 
-        {
-            SDL_RenderPresent(static_cast<SDL_Renderer*>(m_Renderer));
-        }
-        
+        }   
     }
 
     unsigned int Window::GetWidth() const

@@ -1,6 +1,7 @@
 #pragma once
 #include "Core.h"
 #include "Texture.h"
+#include "Box2DBody.h"
 #include <memory>
 
 namespace Mechanism
@@ -36,6 +37,18 @@ namespace Mechanism
 
         bool IsValid() const { return m_Texture != nullptr; }
 
+		void CreatePhysicsBody(void* worldId, bool isDynamic = true, bool isBullet = false);
+        void SyncPhysicsToVisual();
+
+		Box2DBody& GetPhysicsBody() 
+        { 
+            return m_Box2DBody; 
+        }
+
+        bool HasPhysicsBody() const 
+        { 
+            return m_Box2DBody.IsValid(); 
+		}
 
     private:
 
@@ -63,7 +76,9 @@ namespace Mechanism
 
 		float m_AnimationTimer; //time since last frame change
         float m_FrameDuration; //FPS
-        int m_TotalFrames;      
+        int m_TotalFrames;   
+
+		Box2DBody m_Box2DBody;
       
     };
 }

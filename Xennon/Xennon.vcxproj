@@ -23,7 +23,7 @@
     <ClCompile Include="src\GameLevel.cpp" />
     <ClCompile Include="src\Projectile.cpp" />
     <ClCompile Include="src\Spaceship.cpp" />
-    <ClCompile Include="src\TestApp.cpp" />
+    <ClCompile Include="src\Xennon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mechanism\Mechanism.vcxproj">

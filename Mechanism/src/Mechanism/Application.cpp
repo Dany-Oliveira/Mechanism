@@ -34,13 +34,9 @@ namespace Mechanism
 
 			OnUpdate(deltaTime);
 
-
-			// Clear screen to black before rendering
-			auto* renderer = static_cast<SDL_Renderer*>(m_Window->GetRenderer());
-			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-			SDL_RenderClear(renderer);
-
+			m_Window->GetRenderer().Clear(0, 0, 0);		
 			OnRender();
+			m_Window->GetRenderer().Present();
 
 			m_Window->OnUpdate();
 

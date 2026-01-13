@@ -2,11 +2,11 @@
 #include "GameLevel.h"
 
 
-class TestApp : public Mechanism::Application
+class Xennon : public Mechanism::Application
 {
 	public:
 
-		TestApp() : m_CurrentLevel(nullptr)
+		Xennon() : m_CurrentLevel(nullptr)
 		{
 			printf("Test App created\n");
 
@@ -16,7 +16,7 @@ class TestApp : public Mechanism::Application
 			m_CurrentLevel = std::make_unique<GameLevel>(window);
 			
 		}
-		~TestApp()
+		~Xennon()
 		{
 		}
 
@@ -43,5 +43,5 @@ class TestApp : public Mechanism::Application
 
 Mechanism::Application* Mechanism::CreateApplication()
 {
-	return new TestApp();
+	return new Xennon();
 }

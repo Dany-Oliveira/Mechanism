@@ -131,6 +131,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Mechanism\Box2DBody.h" />
+    <ClInclude Include="src\Mechanism\Box2DWorld.h" />
     <ClInclude Include="src\Mechanism\Actor.h" />
     <ClInclude Include="src\Mechanism\Animation.h" />
     <ClInclude Include="src\Mechanism\Level.h" />
@@ -144,6 +146,8 @@
     <ClInclude Include="src\Mechanism\Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Mechanism\Box2DBody.cpp" />
+    <ClCompile Include="src\Mechanism\Box2DWorld.cpp" />
     <ClCompile Include="src\Mechanism\Actor.cpp" />
     <ClCompile Include="src\Mechanism\Animation.cpp" />
     <ClCompile Include="src\Mechanism\Level.cpp" />

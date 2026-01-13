@@ -1,7 +1,8 @@
 #pragma once
-
 #include "Core.h"
+#include "Renderer.h"
 #include <string>
+#include <memory>
 
 namespace Mechanism
 {
@@ -45,9 +46,9 @@ namespace Mechanism
 			return m_Window;
 		}
 
-		void* GetRenderer() const
+		Renderer& GetRenderer() 
 		{
-			return m_Renderer;
+			return *m_Renderer;
 		}
 
 	private:
@@ -57,7 +58,7 @@ namespace Mechanism
 		void Shutdown();
 
 		void* m_Window;
-		void* m_Renderer;
+		std::unique_ptr<Renderer> m_Renderer;
 		WindowData* m_Data;
 	};
 

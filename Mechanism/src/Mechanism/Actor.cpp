@@ -53,6 +53,9 @@ namespace Mechanism
 
     void Actor::UpdateActor(float deltaTime)
     {
+		// Sync physics position to visual position
+		SyncPhysicsToVisual();
+
         if (m_TotalFrames <= 1)
             return;
 
@@ -120,5 +123,47 @@ namespace Mechanism
         {
             m_CurrentFrame = index;
         }
+    }
+
+    void Actor::CreatePhysicsBody(void* worldId, bool isDynamic, bool isBullet)
+    {
+		// Convert position from pixels to meters
+		float pixelsPerMeter = 100.0f; 
+		float physicsX = m_X / pixelsPerMeter;
+		float physicsY = m_Y / pixelsPerMeter;
+
+        if(isDynamic)
+        {
+            m_Box2DBody.CreateDynamic(worldId, physicsX, physicsY, isBullet);
+        }
+        else
+        {
+            m_Box2DBody.CreateStatic(worldId, physicsX, physicsY);
+		}
+
+		// Calculate half-width and half-height in meters, considering scale
+		float halfWidth = (m_FrameWidth * m_ScaleX * 0.5f) / pixelsPerMeter;
+		float halfHeight = (m_FrameHeight * m_ScaleY * 0.5f) / pixelsPerMeter;
+
+		// Add box shape
+		m_Box2DBody.AddBoxShape(halfWidth, halfHeight, 1.0f, 0.0f);
+
+
+    }
+
+    void Actor::SyncPhysicsToVisual()
+    {
+
+        if (m_Box2DBody.IsValid())
+        {   
+			float physicsx, physicsy;
+			m_Box2DBody.GetPosition(physicsx, physicsy);
+
+			// Convert from meters to pixels
+			float pixelsPerMeter = 100.0f;
+            m_X = physicsx * pixelsPerMeter;
+			m_Y = physicsy * pixelsPerMeter;
+        }
+
     }
 }
