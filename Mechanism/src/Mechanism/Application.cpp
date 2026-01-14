@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "Input.h"
 #include "SDL3/SDL.h"
 
 namespace Mechanism
@@ -31,15 +32,18 @@ namespace Mechanism
 			float deltaTime = (currentTime - lastTime) / 1000.0f;
 			lastTime = currentTime;
 
+			//Update input
+			Input::Update();
+			
+			//Update window events
+			m_Window->OnUpdate();
 
 			OnUpdate(deltaTime);
 
+			//Render
 			m_Window->GetRenderer().Clear(0, 0, 0);		
 			OnRender();
 			m_Window->GetRenderer().Present();
-
-			m_Window->OnUpdate();
-
 		}
 	}
 

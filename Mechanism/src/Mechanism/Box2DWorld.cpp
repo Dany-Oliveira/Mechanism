@@ -8,6 +8,7 @@ namespace Mechanism
 
 	Box2DWorld::Box2DWorld(float gravityX, float gravityY): worldId_(nullptr)
 	{
+
 		// Create Box2D world
 		b2WorldDef worldDef = b2DefaultWorldDef();
 		worldDef.gravity = b2Vec2{ gravityX, gravityY };	

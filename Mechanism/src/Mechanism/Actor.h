@@ -12,7 +12,7 @@ namespace Mechanism
 
         Actor(void* renderer, const char* texturePath, float x, float y,
             int gridColumns, int gridRows, int frameIndex = 0);
-        ~Actor();
+        virtual ~Actor();
 
         void Render(void* renderer);
         void SetPosition(float x, float y);

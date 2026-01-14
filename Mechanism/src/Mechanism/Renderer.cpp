@@ -3,7 +3,7 @@
 
 namespace Mechanism
 {
-	Renderer::Renderer(void* sdlRenderer) : m_SDLRenderer(sdlRenderer), m_OwnsRenderer(true)
+	Renderer::Renderer(void* sdlRenderer) : m_SDLRenderer(sdlRenderer), m_OwnsRenderer(false)
 	{
 
 	}

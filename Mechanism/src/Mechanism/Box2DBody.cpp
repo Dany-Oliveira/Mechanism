@@ -7,18 +7,18 @@ namespace Mechanism
 
 	Box2DBody::Box2DBody() : bodyId_(nullptr)
 	{
-		
+
 	}
 
 	Box2DBody::~Box2DBody()
 	{
-		if(bodyId_)
+		if (bodyId_)
 		{
 			// Destroy Box2D body
 			b2BodyId* bodyId = static_cast<b2BodyId*>(bodyId_);
-			if(b2Body_IsValid(*bodyId))
+			if (b2Body_IsValid(*bodyId))
 			{
-				b2DestroyBody(*bodyId);		
+				b2DestroyBody(*bodyId);
 			}
 			delete bodyId;
 			bodyId_ = nullptr;
@@ -36,12 +36,12 @@ namespace Mechanism
 	{
 		if (this != &other)
 		{
-			if(bodyId_)
+			if (bodyId_)
 			{
 				b2BodyId* bodyId = static_cast<b2BodyId*>(bodyId_);
-				if(b2Body_IsValid(*bodyId))
+				if (b2Body_IsValid(*bodyId))
 				{
-					b2DestroyBody(*bodyId);		
+					b2DestroyBody(*bodyId);
 				}
 				delete bodyId;
 			}
@@ -66,7 +66,7 @@ namespace Mechanism
 		bodyDef.position = b2Vec2{ x, y };
 		bodyDef.isBullet = isBullet;
 
-		if(isBullet)
+		if (isBullet)
 		{
 			bodyDef.enableSleep = false;
 		}
@@ -75,15 +75,15 @@ namespace Mechanism
 		b2BodyId bodyId = b2CreateBody(*world, &bodyDef);
 		bodyId_ = new b2BodyId(bodyId);
 	}
-	
-	
+
+
 	void Box2DBody::CreateStatic(void* worldId, float x, float y)
 	{
-		if(!worldId)
+		if (!worldId)
 		{
 			return;
 		}
-		
+
 		// Define body
 		b2WorldId* world = static_cast<b2WorldId*>(worldId);
 
@@ -99,16 +99,16 @@ namespace Mechanism
 
 	void Box2DBody::AddBoxShape(float halfWidth, float halfHeight, float density, float friction)
 	{
-		if(!IsValid())
+		if (!IsValid())
 		{
 			std::cerr << "Error: Attempted to add shape to invalid Box2DBody." << std::endl;
 			return;
 		}
-		
+
 		// Define shape
 
 		b2BodyId* bodyId = static_cast<b2BodyId*>(bodyId_);
-		
+
 		b2ShapeDef shapeDef = b2DefaultShapeDef();
 		shapeDef.density = density;
 		shapeDef.material.friction = friction;
@@ -120,7 +120,7 @@ namespace Mechanism
 
 	void Box2DBody::SetLinearVelocity(float vx, float vy)
 	{
-		if(IsValid())
+		if (IsValid())
 		{
 			b2BodyId* bodyId = static_cast<b2BodyId*>(bodyId_);
 			b2Vec2 velocity = b2Vec2{ vx, vy };
@@ -130,8 +130,8 @@ namespace Mechanism
 
 	void Box2DBody::GetPosition(float& x, float& y) const
 	{
-		
-		if(IsValid())
+
+		if (IsValid())
 		{
 			b2BodyId* bodyId = static_cast<b2BodyId*>(bodyId_);
 			b2Vec2 position = b2Body_GetPosition(*bodyId);
@@ -147,7 +147,7 @@ namespace Mechanism
 
 	bool Box2DBody::IsValid() const
 	{
-		if(!bodyId_)
+		if (!bodyId_)
 		{
 			return false;
 		}

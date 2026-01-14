@@ -4,9 +4,11 @@
 namespace Mechanism
 {
 	
-class MECHANISM_API Animation
-{
+	class MECHANISM_API Animation
+	{
+		
 
-};
+
+	};
 
 }

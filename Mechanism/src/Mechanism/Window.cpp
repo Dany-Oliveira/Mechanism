@@ -1,5 +1,6 @@
 // Window.cpp - Mechanism Engine
 #include "Window.h"
+#include "Input.h"
 #include <SDL3/SDL.h>
 #include <iostream>
 
@@ -123,11 +124,13 @@ namespace Mechanism
         SDL_Event event;
         while (SDL_PollEvent(&event)) 
         {
-
+			// Handle quit event
             if (event.type == SDL_EVENT_QUIT) 
             {
                 m_CloseWindow = true;
             }
+
+			// Handle window resize event
             else if (event.type == SDL_EVENT_WINDOW_RESIZED) 
             {
                 if (m_Data) 
@@ -136,6 +139,17 @@ namespace Mechanism
                     m_Data->height = event.window.data2;
                 }
             }
+
+			// Handle keyboard events
+            else if (event.type == SDL_EVENT_KEY_DOWN)
+            {
+				Input::OnKeyDown(event.key.scancode);
+            }
+            else if (event.type == SDL_EVENT_KEY_UP)
+            {
+				Input::OnKeyUp(event.key.scancode);
+            }
+
         }   
     }
 

@@ -12,6 +12,8 @@
 		SpawnLoner(100.0f, 100.0f);
 		SpawnRusher(300.0f, 300.0f);
 
+		SpawnPlayer(m_WindowWidth / 2.0f, m_WindowHeight - 100.0f);
+
         printf("Spawned %zu actors\n", m_Actors.size());
     }
 
@@ -35,7 +37,7 @@
         }  
 		m_Actors.push_back(std::move(background));
 
-        printf("\nBackground added\n");        
+        printf("Background added\n\n");        
     }
 
     void GameLevel::SpawnLoner(float xPos, float yPos)
@@ -49,7 +51,7 @@
         m_Loner = loner.get();
         m_Actors.push_back(std::move(loner));
 
-        printf("\Loner spawned at (%.0f, %.0f)\n", xPos, yPos);
+        printf("\Loner spawned at (%.0f, %.0f)\n\n", xPos, yPos);
     }
 
     void GameLevel::SpawnRusher(float xPos, float yPos)
@@ -62,12 +64,22 @@
 		m_Rusher = rusher.get();
         m_Actors.push_back(std::move(rusher));
 
-        printf("\Rusher spawned at (%.0f, %.0f)\n", xPos, yPos);
+        printf("\Rusher spawned at (%.0f, %.0f)\n\n", xPos, yPos);
     }
 
-    void GameLevel::SpawnPlayer(float x, float y)
+    void GameLevel::SpawnPlayer(float xPos, float yPos)
     {
-		
+        // x   y  col row 0=its the srite in the col0 row0, the first sprite
+        auto player = std::make_unique<Spaceship>(m_Renderer->GetNativeRenderer(), "assets/Ship1.bmp", xPos, yPos, 7, 1, 3);
+
+		player->CreatePhysicsBody(GetBox2DWorld().GetWorldId(), true, false);
+
+		player->SetSpeed(5.0f); // Set player speed
+
+		m_Player = player.get();
+		m_Actors.push_back(std::move(player));
+       
+		printf("\Player spawned at (%.0f, %.0f)\n\n", xPos, yPos);
     }
 
     void GameLevel::Render()
@@ -86,6 +98,12 @@
     {
 		Level::Update(deltaTime);
 
+        if (m_Player)
+        {
+			// Update player-specific logic
+            m_Player->PlayerUpdate(deltaTime);
+		}
+
         for (const auto& actor : m_Actors)
         {
             if (actor)
@@ -101,6 +119,7 @@
 		m_Background = nullptr;
 		m_Loner = nullptr;
         m_Rusher = nullptr;
+		m_Player = nullptr;
     }
 
 

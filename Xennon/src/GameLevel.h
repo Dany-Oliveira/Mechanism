@@ -4,6 +4,7 @@
 #include "Mechanism/Actor.h"
 #include "Mechanism/Window.h"
 #include "Mechanism/Renderer.h"
+#include "Spaceship.h"  
 #include <memory>  
 #include <optional>
 
@@ -34,11 +35,11 @@
 		int m_WindowWidth;
 		int m_WindowHeight;
 
-		std::vector<std::unique_ptr<Mechanism::Actor>> m_Actors;// All actors in the level
-
         Mechanism::Actor* m_Background;
         Mechanism::Actor* m_Loner;
         Mechanism::Actor* m_Rusher;
-		Mechanism::Actor* m_Player;
+        Spaceship* m_Player;
+
+		std::vector<std::unique_ptr<Mechanism::Actor>> m_Actors;// All actors in the level
     };
 
