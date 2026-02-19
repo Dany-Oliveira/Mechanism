@@ -59,6 +59,39 @@ void Spaceship::PlayerUpdate(float deltaTime)
 		Stop();
 	}
 
+	// Animation frame based on horizontal input
+	const int neutralFrame = 3;
+	const int leftFrame = 0;
+	const int rightFrame = 6;
+
+	int targetFrame;
+	if (directionX < 0.0f)
+	{
+		targetFrame = leftFrame;
+	}
+
+	else if (directionX > 0.0f)
+	{
+		targetFrame = rightFrame;
+	}
+
+	else 
+	{
+		targetFrame = neutralFrame;
+	}
+
+	//update frame
+	if (m_CurrentFrame < targetFrame)
+	{
+		m_CurrentFrame++;
+	}
+	else if (m_CurrentFrame > targetFrame)
+	{
+		m_CurrentFrame--;
+	}
+
+	SetFrameIndex(m_CurrentFrame);
+
 	// Shooting
 	if (Mechanism::Input::IsKeyPressed(Mechanism::Input::KEY_SPACE))
 	{

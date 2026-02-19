@@ -39,11 +39,13 @@ private:
     std::vector<std::unique_ptr<Projectile>> m_Projectiles;// All projectiles in the level
 
     Mechanism::Renderer* m_Renderer;
-    Mechanism::Actor* m_Background;
+    Mechanism::Actor* m_Background1;
+    Mechanism::Actor* m_Background2;
     Mechanism::Actor* m_Loner;
     Mechanism::Actor* m_Rusher;
     Spaceship* m_Player;
 
+    float m_BgScrollSpeed = 50.0f;
+    float m_BackgroundHeight = 480.0f;
 
 };
-

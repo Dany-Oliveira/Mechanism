@@ -3,7 +3,7 @@
 
 
 GameLevel::GameLevel(Mechanism::Window& window) : Level(0.0f, 0.0f),
-m_Renderer(&window.GetRenderer()), m_Background(nullptr), m_Loner(nullptr), m_Rusher(nullptr), m_Player(nullptr),
+m_Renderer(&window.GetRenderer()), m_Background1(nullptr), m_Background2(nullptr), m_Loner(nullptr), m_Rusher(nullptr), m_Player(nullptr),
 m_WindowWidth(window.GetWidth()), m_WindowHeight(window.GetHeight())
 {
     printf("\nGameLevel created!\n");
@@ -28,17 +28,28 @@ GameLevel::~GameLevel()
 
 void GameLevel::AddBackground()
 {
-    // x   y  col row 0=its the srite in the col0 row0, the first sprite
-    auto background = std::make_unique<Mechanism::Actor>(m_Renderer->GetNativeRenderer(), "assets/galaxy2.bmp", 0, 0, 1, 1, 0);
 
-    m_Background = background.get();
-    if (m_Background)
+    // First background layer
+    auto background1 = std::make_unique<Mechanism::Actor>(m_Renderer->GetNativeRenderer(), "assets/galaxy2.bmp", 0, 0, 1, 1, 0);
+    m_Background1 = background1.get();
+    if (m_Background1)
     {
-        m_Background->ScaleActor(3.0f, 3.0f);
+        m_Background1->ScaleActor(3.0f, 3.0f);
+        m_Background1->SetPosition(0, 0);
     }
-    m_Actors.push_back(std::move(background));
+    m_Actors.push_back(std::move(background1));
 
-    printf("Background added\n\n");
+    // Second background layer
+    auto background2 = std::make_unique<Mechanism::Actor>(m_Renderer->GetNativeRenderer(), "assets/galaxy2.bmp", 0, 0, 1, 1, 0);
+    m_Background2 = background2.get();
+    if (m_Background2)
+    {
+        m_Background2->ScaleActor(3.0f, 3.0f);
+        m_Background2->SetPosition(0, -m_BackgroundHeight);
+    }
+    m_Actors.push_back(std::move(background2));
+
+    printf("\nBackground layers added\n");
 }
 
 void GameLevel::SpawnLoner(float xPos, float yPos)
@@ -58,7 +69,7 @@ void GameLevel::SpawnLoner(float xPos, float yPos)
 void GameLevel::SpawnRusher(float xPos, float yPos)
 {
     // x   y  col row 0=its the srite in the col0 row0, the first sprite
-    auto rusher = std::make_unique<Mechanism::Actor>(m_Renderer->GetNativeRenderer(), "assets/rusher.bmp", xPos, yPos, 6, 4, 0);
+    auto rusher = std::make_unique<Mechanism::Actor>(m_Renderer->GetNativeRenderer(), "assets/rusher.bmp", xPos, yPos, 4, 6, 0);
 
     rusher->CreatePhysicsBody(GetBox2DWorld().GetWorldId(), true, false);
 
@@ -136,6 +147,28 @@ void GameLevel::UpdateGameLevel(float deltaTime)
         }
     }
 
+    // Update background scrolling
+    if (m_Background1 && m_Background2)
+    {
+        float bg1Y = m_Background1->GetY();
+        float bg2Y = m_Background2->GetY();
+
+        bg1Y += m_BgScrollSpeed * deltaTime;
+        bg2Y += m_BgScrollSpeed * deltaTime;
+
+        if (bg1Y >= m_BackgroundHeight)
+        {
+            bg1Y = bg2Y - m_BackgroundHeight;
+        }
+        if (bg2Y >= m_BackgroundHeight)
+        {
+            bg2Y = bg1Y - m_BackgroundHeight;
+        }
+
+        m_Background1->SetPosition(0, bg1Y);
+        m_Background2->SetPosition(0, bg2Y);
+    }
+
     //Update all projectiles
     for (auto& projectile : m_Projectiles)
     {
@@ -160,7 +193,8 @@ void GameLevel::UpdateGameLevel(float deltaTime)
 void GameLevel::ClearAllActors()
 {
     m_Actors.clear();
-    m_Background = nullptr;
+    m_Background1 = nullptr;
+    m_Background2 = nullptr;
     m_Loner = nullptr;
     m_Rusher = nullptr;
     m_Player = nullptr;
